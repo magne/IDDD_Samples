@@ -24,18 +24,18 @@ subprojects {
 
 project(':iddd_common') {
     dependencies {
-        compile group: 'com.google.code.gson', name: 'gson', version: '2.1'
-        compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.0.4'
-        compile group: 'org.hibernate', name: 'hibernate-core', version: '3.5.4-Final'
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
+        compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.5.0'
+        compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.9.Final'
         compile group: 'org.springframework', name: 'spring-context', version: '4.1.5.RELEASE'
-        compile group: 'org.iq80.leveldb', name: 'leveldb', version: '0.5'
+        compile group: 'org.iq80.leveldb', name: 'leveldb', version: '0.7'
         runtime group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.10'
         runtime group: 'org.springframework', name: 'spring-orm', version: '4.1.5.RELEASE'
-        runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.7.2'
-        runtime group: 'javassist', name: 'javassist', version: '3.8.0.GA'
+        runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.5'
+        runtime group: 'javassist', name: 'javassist', version: '3.9.0.GA'
 
         testCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
-        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
         testRuntime group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
     }
 }
@@ -43,25 +43,25 @@ project(':iddd_common') {
 project(':iddd_identityaccess') {
     dependencies {
         compile project(':iddd_common')
-        compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0-rc1'
-        compile group: 'org.jboss.resteasy', name: 'resteasy-cache-core', version: '2.0.1.GA'
+        compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+        compile group: 'org.jboss.resteasy', name: 'resteasy-cache-core', version: '3.0.11.Final'
 
         testCompile files(this.project(':iddd_common').sourceSets.test.output)
         testRuntime group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
-        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
         testRuntime group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
         testRuntime group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-        testRuntime group: 'org.jboss.resteasy', name: 'tjws', version: '2.0.1.GA'
+        testRuntime group: 'org.jboss.resteasy', name: 'tjws', version: '3.0.11.Final'
     }
 }
 
 project(':iddd_collaboration') {
     dependencies {
         compile project(':iddd_common')
-        compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '2.0.1.GA'
+        compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.0.11.Final'
 
         testCompile files(this.project(':iddd_common').sourceSets.test.output)
-        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+        testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
         testRuntime group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
     }
 }
