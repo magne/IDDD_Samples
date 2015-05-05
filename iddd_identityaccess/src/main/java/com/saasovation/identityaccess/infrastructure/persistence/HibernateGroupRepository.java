@@ -23,6 +23,7 @@ import com.saasovation.common.port.adapter.persistence.hibernate.AbstractHiberna
 import com.saasovation.identityaccess.domain.model.identity.Group;
 import com.saasovation.identityaccess.domain.model.identity.GroupRepository;
 import com.saasovation.identityaccess.domain.model.identity.TenantId;
+import org.hibernate.type.StandardBasicTypes;
 
 public class HibernateGroupRepository
         extends AbstractHibernateSession
@@ -66,7 +67,7 @@ public class HibernateGroupRepository
                   + "and _obj_.name = ?");
 
         query.setParameter(0, aTenantId);
-        query.setParameter(1, aName, org.hibernate.Hibernate.STRING);
+        query.setParameter(1, aName, StandardBasicTypes.STRING);
 
         return (Group) query.uniqueResult();
     }

@@ -14,16 +14,15 @@
 
 package com.saasovation.identityaccess.infrastructure.persistence;
 
-import java.util.Collection;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
 import com.saasovation.common.port.adapter.persistence.hibernate.AbstractHibernateSession;
 import com.saasovation.identityaccess.domain.model.identity.TenantId;
 import com.saasovation.identityaccess.domain.model.identity.User;
 import com.saasovation.identityaccess.domain.model.identity.UserRepository;
+import org.hibernate.Query;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.type.StandardBasicTypes;
+
+import java.util.Collection;
 
 public class HibernateUserRepository
         extends AbstractHibernateSession
@@ -60,8 +59,8 @@ public class HibernateUserRepository
                 +   "and _obj_.person.name.lastName like ?");
 
         query.setParameter(0, aTenantId);
-        query.setParameter(1, aFirstNamePrefix + "%", Hibernate.STRING);
-        query.setParameter(2, aLastNamePrefix + "%", Hibernate.STRING);
+        query.setParameter(1, aFirstNamePrefix + "%", StandardBasicTypes.STRING);
+        query.setParameter(2, aLastNamePrefix + "%", StandardBasicTypes.STRING);
 
         return query.list();
     }
@@ -84,8 +83,8 @@ public class HibernateUserRepository
                   + "and _obj_.password = ?");
 
         query.setParameter(0, aTenantId);
-        query.setParameter(1, aUsername, Hibernate.STRING);
-        query.setParameter(2, anEncryptedPassword, Hibernate.STRING);
+        query.setParameter(1, aUsername, StandardBasicTypes.STRING);
+        query.setParameter(2, anEncryptedPassword, StandardBasicTypes.STRING);
 
         return (User) query.uniqueResult();
     }
@@ -101,7 +100,7 @@ public class HibernateUserRepository
                   + "and _obj_.username = ?");
 
         query.setParameter(0, aTenantId);
-        query.setParameter(1, aUsername, Hibernate.STRING);
+        query.setParameter(1, aUsername, StandardBasicTypes.STRING);
 
         return (User) query.uniqueResult();
     }

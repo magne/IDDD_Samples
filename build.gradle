@@ -26,12 +26,13 @@ project(':iddd_common') {
     dependencies {
         compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
         compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.5.0'
+        compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.5'
         compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.9.Final'
         compile group: 'org.springframework', name: 'spring-context', version: '4.1.5.RELEASE'
+        compile group: 'org.springframework', name: 'spring-tx', version: '4.1.5.RELEASE'
         compile group: 'org.iq80.leveldb', name: 'leveldb', version: '0.7'
         runtime group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.10'
         runtime group: 'org.springframework', name: 'spring-orm', version: '4.1.5.RELEASE'
-        runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.5'
         runtime group: 'javassist', name: 'javassist', version: '3.9.0.GA'
 
         testCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'

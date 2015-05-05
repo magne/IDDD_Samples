@@ -14,16 +14,15 @@
 
 package com.saasovation.identityaccess.infrastructure.persistence;
 
-import java.util.Collection;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
 import com.saasovation.common.port.adapter.persistence.hibernate.AbstractHibernateSession;
 import com.saasovation.identityaccess.domain.model.access.Role;
 import com.saasovation.identityaccess.domain.model.access.RoleRepository;
 import com.saasovation.identityaccess.domain.model.identity.TenantId;
+import org.hibernate.Query;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.type.StandardBasicTypes;
+
+import java.util.Collection;
 
 public class HibernateRoleRepository
         extends AbstractHibernateSession
@@ -67,7 +66,7 @@ public class HibernateRoleRepository
                   + "and _obj_.name = ?");
 
         query.setParameter(0, aTenantId);
-        query.setParameter(1, aRoleName, Hibernate.STRING);
+        query.setParameter(1, aRoleName, StandardBasicTypes.STRING);
 
         return (Role) query.uniqueResult();
     }

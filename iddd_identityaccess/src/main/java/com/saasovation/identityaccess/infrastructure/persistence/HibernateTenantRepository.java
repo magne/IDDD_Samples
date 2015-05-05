@@ -14,16 +14,15 @@
 
 package com.saasovation.identityaccess.infrastructure.persistence;
 
-import java.util.UUID;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
 import com.saasovation.common.port.adapter.persistence.hibernate.AbstractHibernateSession;
 import com.saasovation.identityaccess.domain.model.identity.Tenant;
 import com.saasovation.identityaccess.domain.model.identity.TenantId;
 import com.saasovation.identityaccess.domain.model.identity.TenantRepository;
+import org.hibernate.Query;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.type.StandardBasicTypes;
+
+import java.util.UUID;
 
 public class HibernateTenantRepository
         extends AbstractHibernateSession
@@ -58,7 +57,7 @@ public class HibernateTenantRepository
                 "from com.saasovation.identityaccess.domain.model.identity.Tenant as _obj_ "
                 + "where _obj_.name = ?");
 
-        query.setParameter(0, aName, Hibernate.STRING);
+        query.setParameter(0, aName, StandardBasicTypes.STRING);
 
         return (Tenant) query.uniqueResult();
     }
