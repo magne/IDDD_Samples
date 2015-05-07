@@ -1,7 +1,5 @@
 #!/bin/bash
 
-host="0.0.0.0"
-
 mysqlUser="root"
 mysqlPassword="root"
 mysqlContainerName="iddd-mysql"
@@ -9,7 +7,7 @@ mysqlPort="3306"
 
 rabbitmqNodeName="$(hostname)"
 rabbitmqContainerName="iddd-rabbitmq"
-rabbitmqManagementHttpPort="8080"
+rabbitmqManagementHttpPort="8079"
 
 containers[0]="${mysqlContainerName}"
 containers[1]="${rabbitmqContainerName}"
@@ -22,16 +20,17 @@ function start() {
     echo "Waiting for MySQL Server to be up and running..."
     waitForContainer "${mysqlContainerName}" "mysqld: ready for connections."
 
+    local mysqlHost="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${mysqlContainerName})"
     local testSqlFiles="$(find $(pwd) -name *.sql | grep -i "test")"
     local sqlFiles="$(find $(pwd) -name *.sql | grep -vi "test")"
     if which mysql > /dev/null; then
         for sql in ${testSqlFiles}; do
             echo "Importing [${sql}]"
-            $(mysql --host="${host}"  --port=3306 --protocol=TCP --user="${mysqlUser}" --password="${mysqlPassword}" < ${sql})
+            $(mysql --host="${mysqlHost}"  --port=3306 --protocol=TCP --user="${mysqlUser}" --password="${mysqlPassword}" < ${sql})
         done
         for sql in ${sqlFiles}; do
             echo "Importing [${sql}]"
-            $(mysql --host="${host}" --port=3306 --protocol=TCP --user="${mysqlUser}" --password="${mysqlPassword}" < ${sql})
+            $(mysql --host="${mysqlHost}" --port=3306 --protocol=TCP --user="${mysqlUser}" --password="${mysqlPassword}" < ${sql})
         done
     else
         echo -e
@@ -44,7 +43,7 @@ function start() {
             echo ${sql}
         done
         echo -e
-        echo "You can find MySQL Server on [localhost] port [${mysqlPort}]"
+        echo "You can find MySQL Server on [${mysqlHost}] port [${mysqlPort}]"
         echo -e
         read -rsp "Press any key to continue..."
         echo -e
@@ -55,9 +54,10 @@ function start() {
     docker run --name "${rabbitmqContainerName}" -p 5672:5672 -p "${rabbitmqManagementHttpPort}":15672 -e RABBITMQ_NODENAME="${rabbitmqNodeName}" -d rabbitmq:3-management
     echo "Waiting for RabbitMQ to be up and running..."
     waitForContainer "${rabbitmqContainerName}" "Server startup complete;"
+    local rabbitmqHost="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${rabbitmqContainerName})"
 
     echo -e
-    echo "RabbitMQ Management available at [http://localhost:${rabbitmqManagementHttpPort}]"
+    echo "RabbitMQ Management available at [http://${rabbitmqHost}:${rabbitmqManagementHttpPort}]"
     echo "(Login with user/pass of [guest/guest])"
 }
 
