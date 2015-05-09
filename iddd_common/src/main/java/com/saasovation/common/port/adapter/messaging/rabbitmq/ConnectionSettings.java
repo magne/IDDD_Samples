@@ -25,6 +25,16 @@ import com.saasovation.common.AssertionConcern;
  */
 public class ConnectionSettings extends AssertionConcern {
 
+    private static String mqhost = getenv("RABBITMQ_HOST", "localhost");
+
+    private static String getenv(String name, String def) {
+        String env = System.getenv(name);
+        if (env == null || env.isEmpty()) {
+            return def;
+        }
+        return env;
+    }
+
     /** My hostName, which is the name of the host server. */
     private String hostName;
 
@@ -45,7 +55,7 @@ public class ConnectionSettings extends AssertionConcern {
      * @return ConnectionSettings
      */
     public static ConnectionSettings instance() {
-        return new ConnectionSettings("localhost", -1, "/", null, null);
+        return new ConnectionSettings(mqhost, -1, "/", null, null);
     }
 
     /**

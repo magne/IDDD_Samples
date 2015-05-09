@@ -4,14 +4,30 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:util="http://www.springframework.org/schema/util"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:properties id="default-properties">
+        <prop key="datasource_host">localhost</prop>
+        <prop key="datasource_port">3306</prop>
+        <prop key="datasource_url">jdbc:mysql://${datasource_host}:${datasource_port}/${datasource_schema}</prop>
+        <prop key="datasource_username">root</prop>
+        <prop key="datasource_password">root</prop>
+        <prop key="datasource.driverClassName">com.mysql.jdbc.Driver</prop>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+    </util:properties>
+
+    <util:list id="hibernate.mappings" />
+
+    <context:property-placeholder location="classpath:datasource.properties" properties-ref="default-properties"  system-properties-mode="OVERRIDE" />
 
     <aop:aspectj-autoproxy/>
 
@@ -19,9 +35,21 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${datasource.driverClassName}" />
+        <property name="url" value="${datasource_url}" />
+        <property name="username" value="${datasource_username}" />
+        <property name="password" value="${datasource_password}" />
+    </bean>
+
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-        <property name="configLocation">
-            <value>classpath:hibernate.cfg.xml</value>
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingResources" ref="hibernate.mappings" />
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=${hibernate.dialect}
+                hibernate.bytecode.use_reflection_optimizer=false
+            </value>
         </property>
     </bean>
 
@@ -46,22 +74,21 @@
 
     <bean id="eventStore" class="com.saasovation.common.port.adapter.persistence.hibernate.HibernateEventStore" autowire="byName" />
 
-	<bean id="eventStoreDataSource" destroy-method="close" 	class="org.apache.commons.dbcp.BasicDataSource">
-	    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-	    <property name="url" value="jdbc:mysql://localhost:3306/iddd_common_test" />
-	    <property name="username" value="root" />
-	    <property name="password" value="root" />
-	    <property name="initialSize" value="3" />
-	    <property name="defaultAutoCommit" value="false" />
-	</bean>
+    <bean id="eventStoreDataSource" destroy-method="close" 	class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${datasource.driverClassName}" />
+        <property name="url" value="${datasource_url}" />
+        <property name="username" value="${datasource_username}" />
+        <property name="password" value="${datasource_password}" />
 
-	<bean id="mysqlJdbcEventStore" class="com.saasovation.common.port.adapter.persistence.eventsourcing.mysql.MySQLJDBCEventStore" autowire="byName">
-		<constructor-arg ref="eventStoreDataSource" />
-	</bean>
+        <property name="initialSize" value="3" />
+        <property name="defaultAutoCommit" value="false" />
+    </bean>
+
+    <bean id="mysqlJdbcEventStore" class="com.saasovation.common.port.adapter.persistence.eventsourcing.mysql.MySQLJDBCEventStore" autowire="byName">
+        <constructor-arg ref="eventStoreDataSource" />
+    </bean>
 
     <bean id="publishedNotificationTrackerStore" class="com.saasovation.common.port.adapter.persistence.hibernate.HibernatePublishedNotificationTrackerStore" autowire="byName" />
 
     <bean id="timeConstrainedProcessTrackerRepository" class="com.saasovation.common.port.adapter.persistence.hibernate.HibernateTimeConstrainedProcessTrackerRepository" autowire="byName" />
-
-    <bean id="testableTimeConstrainedProcessRepository" class="com.saasovation.common.domain.model.process.TestableTimeConstrainedProcessRepository" autowire="byName" />
 </beans>
