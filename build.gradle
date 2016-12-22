@@ -1,17 +1,11 @@
-apply plugin: 'sonar-runner'
+plugins {
+    id "org.sonarqube" version "2.2"
+}
 
 allprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.8
-}
-
-sonarRunner {
-    sonarProperties {
-        property 'sonar.host.url', 'https://sonar.codehive.org'
-        property 'sonar.jdbc.url', 'jdbc:postgresql:db:5432/sonar'
-        property 'sonar.jdbc.username', 'sonar'
-        property 'sonar.jdbc.password', 'sonar'
-    }
+    targetCompatibility = 1.8
 }
 
 subprojects {
@@ -83,4 +77,9 @@ project(':iddd_agilepm') {
 
         testCompile files(this.project(':iddd_common').sourceSets.test.output)
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+    distributionType = Wrapper.DistributionType.ALL
 }
