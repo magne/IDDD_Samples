@@ -19,6 +19,7 @@ function start() {
 
     echo "Waiting for MySQL Server to be up and running..."
     waitForContainer "${mysqlContainerName}" "mysqld: ready for connections."
+    sleep 10 # Need to wait for MySQL to initialize database
 
     local mysqlHost="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${mysqlContainerName})"
     local testSqlFiles="$(find $(pwd) -name *.sql | grep -i "test")"
